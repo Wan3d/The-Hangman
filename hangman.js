@@ -160,8 +160,8 @@ function main() {
 }
 
 function getLetter() {
-    let inputLetter = document.getElementById('input-area').value;
-
+    let inputLetter = document.getElementById('input-area').value.toLowerCase();
+    
     if (inputLetter.length != 1 || (inputLetter <= 97 || inputLetter >= 122)) {
         alert("Insert a valid character!");
         return;
@@ -170,7 +170,7 @@ function getLetter() {
     let isRight = false;
 
     for (let i = 0; i < arrayLetter.length; i++) {
-        if (arrayLetter[i].toLowerCase() === inputLetter.toLowerCase()) {
+        if (arrayLetter[i].toLowerCase() === inputLetter) {
             if (arrayUnderscore[i].toLowerCase() === inputLetter.toLowerCase()) {
                 alert("You already tried this letter");
                 isRight = true;
