@@ -6,40 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" >
+    <link rel="shortcut icon"
+        href="/images/297-2975845_this-icon-resembles-a-typical-hangmans-noose-hanging-rope-vector-png.png">
     <title>The Hangman
     </title>
-</head>
+    </head>
 
-<body>
-    <header>
-        <div class="header-title">
-            <h1>The Hangman</h1>
-        </div>
-    </header>
-    <div class="container">
-        <div class="container-game">
-            <div class="scores-container">
-                <div>
-                    <h2 id="lifes">Lifes:</h2>
-                </div>
-                <div>
-                    <h2 id="wins">Wins:</h2>
-                </div>
+    <body>
+        <header>
+            <div class="header-title">
+                <h1>The Hangman</h1>
             </div>
-            <canvas id="myCanvas" height="300px" width="300px"></canvas>
-            <h1 id="word"></h1>
+        </header>
+        <div class="container">
+            <div class="container-game">
+                <div class="scores-container">
+                    <div>
+                        <h2 id="lifes">Lifes:</h2>
+                    </div>
+                    <div>
+                        <h2 id="wins">Wins:</h2>
+                    </div>
+                </div>
+                <canvas id="myCanvas" height="300px" width="300px"></canvas>
+                <h1 id="word"></h1>
+            </div>
+            <div class="nes-field is-inline">
+                <label for="inline_field">Enter your input</label>
+                <input type="text" id="input-area" placeholder="Enter a letter">
+            </div>
         </div>
-        <div class="nes-field is-inline">
-            <label for="inline_field">Enter your input</label>
-            <input type="text" id="input-area" placeholder="Enter a letter">
+        <div class="buttons-container">
+            <button id="play-again" class="nes-btn is-success">Play Again!</button>
+            <button onclick="window.location.href='index.html'" class="nes-btn is-primary">Home</button>
         </div>
-    </div>
-    <div class="buttons-container">
-        <button id="play-again" class="nes-btn is-success">Play Again!</button>
-        <button onclick="window.location.href='index.html'" class="nes-btn is-primary">Home</button>
-    </div>
-    <script src="hangman.js"></script>
-</body>
+        <script src="hangman.js"></script>
+    </body>
 
 </html>
