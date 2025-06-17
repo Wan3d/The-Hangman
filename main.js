@@ -163,7 +163,7 @@ function getLetter() {
     let inputLetter = document.getElementById('input-area').value.toLowerCase();
     document.getElementById('input-area').value = "";
 
-    if (inputLetter.length != 1 || !(/[a-zA-Z]/.test(inputLetter))) {
+    if (inputLetter.length != 1) {
         alert(`${inputLetter} is not a valid character. Only letters (A-Z)!`);
         return;
     }
