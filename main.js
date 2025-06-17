@@ -30,7 +30,7 @@ const arrayWords = [
     "plant", "tree", "flower", "leaf", "grass", "bush", "root", "stem", "seed", "fruit",
     "tool", "hammer", "screwdriver", "wrench", "saw", "drill", "tape", "level", "nail", "screw",
     "clean", "wash", "sweep", "vacuum", "mop", "dust", "polish", "scrub", "rinse", "wipe",
-    "science", "math", "history", "geography", "biology", "chemistry", "physics", "art", "music", "PE",
+    "science", "math", "history", "geography", "biology", "chemistry", "physics", "art", "music", "rich",
     "idea", "plan", "goal", "dream", "vision", "mission", "strategy", "tactic", "project", "task",
     "movie", "film", "actor", "actress", "director", "script", "scene", "camera", "screenplay", "studio",
     "water", "fire", "earth", "air", "energy", "power", "light", "dark", "heat", "cold",
@@ -40,6 +40,9 @@ const arrayWords = [
 
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
+
+const canvasLetters = document.getElementById("letterTried");
+const ctxLetters = canvasLetters.getContext("2d");
 
 function initializateHangman() {
     // Clear canvas before start drawing
@@ -89,30 +92,13 @@ function drawRightLeg() {
     ctx.stroke();
 }
 
-function winMessage() {
+function endMessage(status, color) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.textAlign = "center";
     ctx.font = "20px 'Press Start 2P'";
-    ctx.fillStyle = "green";
-    ctx.fillText("You won!! =D", canvas.width / 2, canvas.height / 2);
-
-    ctx.fillStyle = "black";
-
-    ctx.font = "15px 'Press Start 2P'";
-    ctx.fillText("To play again", (canvas.width / 2), (canvas.height / 2) + 50);
-
-    ctx.font = "10px 'Press Start 2P'";
-    ctx.fillText("Press the green button =)", (canvas.width / 2), (canvas.height / 2) + 70);
-}
-
-function loseMessage() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.textAlign = "center";
-    ctx.font = "20px 'Press Start 2P'";
-    ctx.fillStyle = "red";
-    ctx.fillText("You lost!! =(", canvas.width / 2, canvas.height / 2);
+    ctx.fillStyle = color;
+    ctx.fillText(status, canvas.width / 2, canvas.height / 2);
 
     ctx.fillStyle = "black";
 
@@ -135,8 +121,16 @@ function drawing(countError) {
     }
 }
 
+function letterTried(position, letter, color) {
+    ctxLetters.fillStyle = color;
+    ctxLetters.textAlign = "center";
+    ctxLetters.font = "20px 'Press Start 2P'";
+    ctxLetters.fillText(letter, 70, 50 + position);
+}
+
 let countWins = 0;
-let arrayLetter, arrayUnderscore, wordToGuess, countLifes, rightAnswer, countError;
+let arrayLetter, arrayUnderscore, wordToGuess, countLives, rightAnswer, countError, countTries;
+let wrongTry = [];
 
 function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -144,36 +138,43 @@ function randomNumber(min, max) {
 
 function main() {
     document.getElementById('input-area').disabled = false;
+
     const randNum = randomNumber(0, arrayWords.length - 1);
+    wrongTry = [];
+
     wordToGuess = arrayWords[randNum];
     arrayLetter = Array.from(wordToGuess);
     arrayUnderscore = new Array(arrayLetter.length).fill("_");
-    countLifes = 6;
+    countLives = 6;
     rightAnswer = 0;
     countError = 0;
+    countTries = 0;
 
     document.getElementById('word').innerText = arrayUnderscore.join(" ");
-    document.getElementById('lifes').innerText = "Lifes: " + countLifes;
+    document.getElementById('lifes').innerText = "Lives: " + countLives;
     document.getElementById('wins').innerText = "Wins: " + countWins;
     document.getElementById('input-area').value = "";
+
     drawing(countError);
+    ctxLetters.clearRect(0, 0, canvasLetters.width, canvasLetters.height);
 }
 
 function getLetter() {
-    let inputLetter = document.getElementById('input-area').value;
+    let inputLetter = document.getElementById('input-area').value.toLowerCase();
+    document.getElementById('input-area').value = "";
 
-    if (inputLetter.length != 1 || (inputLetter <= 97 || inputLetter >= 122)) {
-        alert("Insert a valid character!");
+    if (inputLetter.length != 1 || !(/[a-zA-Z]/.test(inputLetter))) {
+        alert(`${inputLetter} is not a valid character. Only letters (A-Z)!`);
         return;
     }
 
     let isRight = false;
 
     for (let i = 0; i < arrayLetter.length; i++) {
-        if (arrayLetter[i].toLowerCase() === inputLetter.toLowerCase()) {
+        if (arrayLetter[i].toLowerCase() === inputLetter) {
             if (arrayUnderscore[i].toLowerCase() === inputLetter.toLowerCase()) {
                 alert("You already tried this letter");
-                isRight = true;
+                return;
             }
             else {
                 arrayUnderscore[i] = inputLetter;
@@ -182,24 +183,40 @@ function getLetter() {
                 isRight = true;
             }
         }
+        else {
+            if (wrongTry.includes(inputLetter)) {
+                alert("You already tried this letter");
+                return;
+            }
+        }
     }
 
     if (!isRight) {
-        countLifes -= 1;
+        wrongTry.push(inputLetter);
+
+        countLives -= 1;
         countError += 1;
-        document.getElementById('lifes').innerText = "Lifes: " + countLifes;
+
+        document.getElementById('lifes').innerText = "Lives: " + countLives;
         drawing(countError);
-        if (countLifes === 0) {
-            loseMessage();
+
+        countTries += 30;
+        letterTried(countTries, inputLetter, "red");
+
+        if (countLives === 0) {
+            endMessage("You lost!! =(", "red");
             document.getElementById('word').innerText = arrayLetter.join(" ");
             document.getElementById('input-area').disabled = true;
             //main();
         }
     }
-
+    else {
+        countTries += 30;
+        letterTried(countTries, inputLetter, "green");
+    }
 
     if (rightAnswer === arrayLetter.length) {
-        winMessage();
+        endMessage("You won!! =D", "green");
         countWins += 1;
         document.getElementById('wins').innerText = "Wins: " + countWins;
         document.getElementById('word').innerText = arrayLetter.join(" ");
@@ -211,11 +228,10 @@ function getLetter() {
 }
 
 document.getElementById('play-again').addEventListener("click", main);
-document.getElementById('input-area').addEventListener("keydown", function (e) {
-    if (e.keyCode === 13) {
-        getLetter();
-    }
+document.getElementById('input-area').addEventListener("input", function (e) {
+    getLetter();
 });
+
 
 main();
 

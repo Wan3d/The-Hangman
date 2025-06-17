@@ -101,3 +101,29 @@ header>.header-title>h1 {
     border: 3px groove black;
 }
 
+.letter-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.canvas-letters {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.letter-tried {
+    border: 2px solid black;
+    position: absolute;
+    top: -50px;
+    left: 700px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.letter-tried h2 {
+    text-align: center;
+}
