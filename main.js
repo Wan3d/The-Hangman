@@ -172,6 +172,7 @@ function getLetter() {
 
     for (let i = 0; i < arrayLetter.length; i++) {
         if (arrayLetter[i].toLowerCase() === inputLetter) {
+        if (arrayLetter[i].toLowerCase() === inputLetter) {
             if (arrayUnderscore[i].toLowerCase() === inputLetter.toLowerCase()) {
                 alert("You already tried this letter");
                 return;
