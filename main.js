@@ -163,7 +163,7 @@ function getLetter() {
     let inputLetter = document.getElementById('input-area').value.toLowerCase();
     document.getElementById('input-area').value = "";
 
-    if (inputLetter.length != 1) {
+    if (inputLetter.length != 1 || !(/[a-zA-Z]/.test(inputLetter))) {
         alert(`${inputLetter} is not a valid character. Only letters (A-Z)!`);
         return;
     }
@@ -172,61 +172,60 @@ function getLetter() {
 
     for (let i = 0; i < arrayLetter.length; i++) {
         if (arrayLetter[i].toLowerCase() === inputLetter) {
-            if (arrayLetter[i].toLowerCase() === inputLetter) {
-                if (arrayUnderscore[i].toLowerCase() === inputLetter.toLowerCase()) {
-                    alert("You already tried this letter");
-                    return;
-                }
-                else {
-                    arrayUnderscore[i] = inputLetter;
-                    rightAnswer += 1;
-                    document.getElementById('word').innerText = arrayUnderscore.join(" ");
-                    isRight = true;
-                }
+            if (arrayUnderscore[i].toLowerCase() === inputLetter.toLowerCase()) {
+                alert("You already tried this letter");
+                return;
             }
             else {
-                if (wrongTry.includes(inputLetter)) {
-                    alert("You already tried this letter");
-                    return;
-                }
-            }
-        }
-
-        if (!isRight) {
-            wrongTry.push(inputLetter);
-
-            countLives -= 1;
-            countError += 1;
-
-            document.getElementById('lifes').innerText = "Lives: " + countLives;
-            drawing(countError);
-
-            countTries += 30;
-            letterTried(countTries, inputLetter, "red");
-
-            if (countLives === 0) {
-                endMessage("You lost!! =(", "red");
-                document.getElementById('word').innerText = arrayLetter.join(" ");
-                document.getElementById('input-area').disabled = true;
-                //main();
+                arrayUnderscore[i] = inputLetter;
+                rightAnswer += 1;
+                document.getElementById('word').innerText = arrayUnderscore.join(" ");
+                isRight = true;
             }
         }
         else {
-            countTries += 30;
-            letterTried(countTries, inputLetter, "green");
+            if (wrongTry.includes(inputLetter)) {
+                alert("You already tried this letter");
+                return;
+            }
         }
+    }
 
-        if (rightAnswer === arrayLetter.length) {
-            endMessage("You won!! =D", "green");
-            countWins += 1;
-            document.getElementById('wins').innerText = "Wins: " + countWins;
+    if (!isRight) {
+        wrongTry.push(inputLetter);
+
+        countLives -= 1;
+        countError += 1;
+
+        document.getElementById('lifes').innerText = "Lives: " + countLives;
+        drawing(countError);
+
+        countTries += 30;
+        letterTried(countTries, inputLetter, "red");
+
+        if (countLives === 0) {
+            endMessage("You lost!! =(", "red");
             document.getElementById('word').innerText = arrayLetter.join(" ");
-
+            document.getElementById('input-area').disabled = true;
             //main();
         }
-        document.getElementById('input-area').value = "";
-
     }
+    else {
+        countTries += 30;
+        letterTried(countTries, inputLetter, "green");
+    }
+
+    if (rightAnswer === arrayLetter.length) {
+        endMessage("You won!! =D", "green");
+        countWins += 1;
+        document.getElementById('wins').innerText = "Wins: " + countWins;
+        document.getElementById('word').innerText = arrayLetter.join(" ");
+
+        //main();
+    }
+    document.getElementById('input-area').value = "";
+
+
 }
 
 document.getElementById('play-again').addEventListener("click", main);
